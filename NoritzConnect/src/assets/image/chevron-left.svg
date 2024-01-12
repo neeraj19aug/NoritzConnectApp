@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="22px" viewBox="0 0 13 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>chevron-left</title>
+    <g id="Steps" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="FontAwesome5Free-Solid, Font Awesome 5 Free" font-size="24" font-weight="800">
+        <g id="New-2" transform="translate(-16.000000, -130.000000)" fill="#000000">
+            <text id="chevron-left">
+                <tspan x="15" y="150">chevron-left</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

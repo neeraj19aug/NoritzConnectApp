@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "8382898606",
+    "firebase_url": "https://noritz-connect-4bfb0.firebaseio.com",
+    "project_id": "noritz-connect-4bfb0",
+    "storage_bucket": "noritz-connect-4bfb0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8382898606:android:049f8e63499729a5",
+        "android_client_info": {
+          "package_name": "com.noritz.iot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8382898606-bfr7a529aiuc0tneohceuql9tnnc2gng.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.noritz.iot",
+            "certificate_hash": "507ff282143c1e48da3f947c64a97dae5ac3789a"
+          }
+        },
+        {
+          "client_id": "8382898606-0eujqppja1lbupdf6d810mdrtecub3c9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5aMSPBR9g3tvcsazkIswYHbgdagf7DLI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8382898606-0eujqppja1lbupdf6d810mdrtecub3c9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8382898606-2t3a2vnq8j02r8950a517kkdkdq9eb8r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.noritz.noritzconnect"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
