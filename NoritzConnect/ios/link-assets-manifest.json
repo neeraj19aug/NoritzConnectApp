@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Oxygen-Bold.otf",
+      "sha1": "16138e76108200a8ea7dd80ad654be38fbd4ee8e"
+    },
+    {
+      "path": "src/assets/fonts/Oxygen-BoldItalic.otf",
+      "sha1": "5d247554cd44d1316c89cd09b3b414fc37193b92"
+    },
+    {
+      "path": "src/assets/fonts/Oxygen-Italic.otf",
+      "sha1": "2209db9da4de9c70fc008e260f8f62e0a1ca6249"
+    },
+    {
+      "path": "src/assets/fonts/Oxygen.otf",
+      "sha1": "d3ff815c6b4a471473e44deed92801b3015f8486"
+    },
+    {
+      "path": "src/assets/fonts/oxygen.light.ttf",
+      "sha1": "75852fb55e25f255c3e146f2e13c25b36c0800be"
+    }
+  ]
+}

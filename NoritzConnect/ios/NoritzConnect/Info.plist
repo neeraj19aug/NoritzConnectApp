@@ -36,6 +36,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>1076312769549634</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -60,6 +62,18 @@
 	<string>Noritz Connect would like to access camera for Scan QR code.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Noritz Connect needs location permission to scan wifi networks.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Oxygen-Bold.otf</string>
+		<string>Oxygen-BoldItalic.otf</string>
+		<string>Oxygen-Italic.otf</string>
+		<string>Oxygen.otf</string>
+		<string>oxygen.light.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -36,6 +36,7 @@ import Fonts from '../../services/Fonts';
 import Strings from '../../services/Strings';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
 import FastImage from 'react-native-fast-image';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 const {RNTwitterSignIn} = NativeModules;
 
 const Constants = {
@@ -55,7 +56,14 @@ class LoginScreen extends Component {
       password: 'qwerty',
       rememberMe: false,
       isVisibleRevokePopup: false,
+      isVisibleMaintainancePopup: false,
       showAgain: true,
+      button_text: '',
+      popup_text: '',
+      popup_title: '',
+      is_maintenance: 0,
+      force_update: 0,
+      recommend_update: 0
     };
   }
 
@@ -69,6 +77,7 @@ class LoginScreen extends Component {
       setConfiguration('homescreenLoaded', 'false');
       setConfiguration('navigation', this.props.navigation);
     });
+    // this.getAppVersionDataAPI();
   }
 
   componentWillUnmount() {
@@ -396,6 +405,114 @@ class LoginScreen extends Component {
     }
   }
 
+  getAppVersionDataAPI() {
+    Keyboard.dismiss();
+
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected) {
+          this.props
+            .getAppVersionData('1', '1', Platform.OS)
+            .then(() => this.afterGetAppVersionData())
+            .catch((e) =>
+              showAlert(
+                'It seems something went wrong on the server. Please try after some time.',
+                300,
+              ),
+            );
+      } else {
+        showAlert(Strings.networkError, 300);
+      }
+    });
+  }
+
+  async afterGetAppVersionData() {
+    const {response} = this.props.responseAppVersiondata;
+
+    if (response != null) {
+      let resCode = response.responseCode;
+      // resCode = await decryptValue(resCode);
+      var resMessage = '';
+      if (resCode == 200) {
+        let is_maintenance = response.data.is_maintenance;
+        // is_maintenance = await decryptValue(is_maintenance);        
+        
+        let force_update = response.data.force_update;
+        // force_update = await decryptValue(force_update);
+        
+        let recommend_update = response.data.recommend_update;
+        // recommend_update = await decryptValue(recommend_update);
+        
+        if (force_update == true) {
+          let popup_text = response.data.popup_text;
+          // popup_text = await decryptValue(popup_text);
+  
+          let allow_app_access = response.data.allow_app_access;
+          // allow_app_access = await decryptValue(allow_app_access);
+
+          let button_text = response.data.button_text;
+          // button_text = await decryptValue(button_text);
+  
+          let popup_title = response.data.popup_title;
+          // popup_title = await decryptValue(popup_title);
+          
+
+        } else if (is_maintenance == true) {
+
+          let popup_text = response.data.popup_text;
+          // popup_text = await decryptValue(popup_text);
+  
+          let allow_app_access = response.data.allow_app_access;
+          // allow_app_access = await decryptValue(allow_app_access);
+
+          let button_text = response.data.button_text;
+          // button_text = await decryptValue(button_text);
+  
+          let popup_title = response.data.popup_title;
+          // popup_title = await decryptValue(popup_title);
+
+          let timezone = response.data.timezone;
+          // timezone = await decryptValue(timezone);
+  
+          let maintenance_start = response.data.maintenance_start;
+          // maintenance_start = await decryptValue(maintenance_start);
+  
+          let maintenance_end = response.data.maintenance_end;
+          // maintenance_end = await decryptValue(maintenance_end);
+  
+          
+        } else if (recommend_update == true) {
+
+          let popup_text = response.data.popup_text;
+          // popup_text = await decryptValue(popup_text);
+  
+          let allow_app_access = response.data.allow_app_access;
+          // allow_app_access = await decryptValue(allow_app_access);
+
+          let button_text = response.data.button_text;
+          // button_text = await decryptValue(button_text);
+  
+          let popup_title = response.data.popup_title;
+          // popup_title = await decryptValue(popup_title);          
+        }
+
+
+      
+
+       
+      
+
+        
+
+
+
+      } else {
+        resMessage = response.responseMessage;
+        // resMessage = await decryptValue(resMessage);
+        showAlert(resMessage, 300);
+      }
+    }
+  }  
+
   callMetaDataAPI(user_id, Check) {
     NetInfo.fetch().then((state) => {
       if (state.isConnected) {
@@ -699,6 +816,41 @@ class LoginScreen extends Component {
     );
   };
 
+  maintainancePopupOButtonClick() {
+    
+  }
+
+  maintainancePopup = () => {
+    return (
+      <View style={styles.maintainancePopup}>
+        <Text allowFontScaling={false} style={styles.titleTemperaturePopup}>
+          {this.state.popup_title}
+        </Text>
+        <Text allowFontScaling={false} style={styles.contentTemperaturePopup}>
+          {/* {Strings.TempWarningDesc} */}
+          {this.state.popup_text}
+        </Text>
+
+        
+
+        <View style={{width: '100%', alignItems: 'flex-end'}}>
+        <TouchableOpacity
+          style={styles.cancelMaintainancePopup}
+          onPress={() => this.maintainancePopupOButtonClick()}>
+          <Text
+            allowFontScaling={false}
+            style={[
+              styles.closeTemperaturePopup,
+              {color: getColors().redColor},
+            ]}>
+          {this.state.button_text}
+          </Text>
+          </TouchableOpacity>
+          </View>
+      </View>
+    );
+  };
+
   render() {
     return (
       <DarkModeContext.Consumer>
@@ -763,6 +915,19 @@ class LoginScreen extends Component {
                 {this.state.isVisibleRevokePopup && this.revokeAccessPopup()}
               </DialogContent>
             </Dialog>
+
+
+            <Dialog
+              visible={this.state.isVisibleMaintainancePopup}
+              rounded={false}
+              onTouchOutside={() => {
+                this.setState({isVisibleRevokePopup: false});
+              }}>
+              <DialogContent style={styles.setPadding}>
+                {this.state.isVisibleMaintainancePopup && this.maintainancePopup()}
+              </DialogContent>
+            </Dialog>
+
 
             <TouchableOpacity
               style={styles.rememberBG}

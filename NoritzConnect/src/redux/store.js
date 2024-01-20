@@ -30,6 +30,7 @@ import GetInstantInfoReducer from '../modules/GetInstantInfo';
 import InstantReserveReducer from '../modules/RequestInstantReserve';
 import GetRecirculationDataReducer from '../modules/GetRecirculationData';
 import deleteReducer from '../modules/DeleteUser';
+import appVersionDataReducer from '../modules/GetAppVersionData';
 
 import middleware from './middleware';
 
@@ -64,6 +65,7 @@ const rootReducer = combineReducers({
   GetRecirculationDataReducer,
   MaintainenceReducer,
   deleteReducer,
+  appVersionDataReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(...middleware));

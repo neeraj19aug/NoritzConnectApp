@@ -141,12 +141,25 @@ const styles = {
     margin: 0,
     padding:0,
   },
+  maintainancePopup: {
+    width: wp('70%'),
+    // height: wp('85%'),
+    margin: 0,
+    padding:0,
+  },
   cancelPopup: {
     position: 'absolute',
     right: wp('-3%'),
     bottom: -15,
     width: wp('20%'),
     height: hp('5%'),
+  },
+
+  cancelMaintainancePopup: {
+   
+    width: wp('20%'),
+    marginTop: 20
+    // height: hp('5%'),
   },
 
   closeTemperaturePopup: {

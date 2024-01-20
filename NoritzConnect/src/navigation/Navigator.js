@@ -28,6 +28,7 @@ import DeleteAccount from '../screens/deleteAccount';
 import DeleteAccountConfirmation from '../screens/deleteAccountConfirmation';
 import RecirculationTutorialScreen from '../screens/RecirculationTutorial';
 import RemoveAccountAccess from '../screens/removeAccessProcess/RemoveAccessProcess';
+import AuthLoadingScreen from '../screens/AuthLoading';
 //Schedule
 const EditProfileStack = createStackNavigator();
 
@@ -158,6 +159,10 @@ export default function App() {
           headerTitleAlign: 'center',
           gestureEnabled: false,
         }}>
+
+        <HomeStack.Screen name="AuthLoadingScreen">
+          {(props) => <AuthLoadingScreen {...props} />}
+        </HomeStack.Screen>
         <HomeStack.Screen name="Login">
           {(props) => <LoginScreen {...props} />}
         </HomeStack.Screen>

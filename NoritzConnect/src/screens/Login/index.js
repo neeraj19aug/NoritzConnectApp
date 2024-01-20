@@ -4,7 +4,8 @@ import LoginScreen from './Login';
 import {loginUser} from '../../modules/Login';
 import {forgotUser} from '../../modules/Forgot';
 import {getMetadata} from '../../modules/MetaData';
-import {changeHeater} from '../../modules/ChangeHeater';
+import { changeHeater } from '../../modules/ChangeHeater';
+import { getAppVersionData } from '../../modules/GetAppVersionData'
 
 const mapStateToProps = (state) => ({
   isBusyLogin: state.loginReducer.isBusy,
@@ -18,6 +19,9 @@ const mapStateToProps = (state) => ({
 
   isBusyChangeHeater: state.ChangeHeaterReducer.isBusy,
   responseChangeHeater: state.ChangeHeaterReducer,
+
+  isBusyAppVersiondata: state.appVersionDataReducer.isBusy,
+  responseAppVersiondata: state.appVersionDataReducer,  
 });
 
 export default connect(mapStateToProps, (dispatch) => ({
@@ -25,4 +29,5 @@ export default connect(mapStateToProps, (dispatch) => ({
   forgotUser: bindActionCreators(forgotUser, dispatch),
   getMetadata: bindActionCreators(getMetadata, dispatch),
   changeHeater: bindActionCreators(changeHeater, dispatch),
+  getAppVersionData: bindActionCreators(getAppVersionData, dispatch),
 }))(LoginScreen);

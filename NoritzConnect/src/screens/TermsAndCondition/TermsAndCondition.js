@@ -25,7 +25,7 @@ class TermsAndConditionScreen extends Component {
     }
 
     this.state = {
-      webViewUrl: 'http://procard.noritz.com/assets/uploads/tos_iot.htm',
+      webViewUrl: 'https://procard.noritz.com/assets/uploads/tos_iot.htm',
     };
   }
 
