@@ -1586,7 +1586,8 @@ class HomeScreen extends Component {
                     }}>
                     <View style={{justifyContent: 'center'}}>
                       <Text
-                        style={[
+                allowFontScaling={false}
+                style={[
                           styles.btnText,
                           {
                             color: '#AAAAAA',
@@ -1683,8 +1684,9 @@ class HomeScreen extends Component {
                     justifyContent: 'center',
                   }}>
                   <View style={{justifyContent: 'center'}}>
-                    <Text
-                      style={[
+                      <Text
+                allowFontScaling={false}
+                style={[
                         styles.btnText,
                         {
                           color: '#AAAAAA',
@@ -5333,7 +5335,8 @@ class HomeScreen extends Component {
                       }}>
                       <View style={{justifyContent: 'center'}}>
                         <Text
-                          style={[
+                allowFontScaling={false}
+                style={[
                             styles.btnText,
                             {
                               color: '#AAAAAA',
@@ -5345,6 +5348,7 @@ class HomeScreen extends Component {
                       </View>
                       <View style={{justifyContent: 'center'}}>
                         <Text
+                          allowFontScaling={false}
                           style={[
                             styles.btnText,
                             {
@@ -5357,6 +5361,7 @@ class HomeScreen extends Component {
                       </View>
                       <View style={{justifyContent: 'center'}}>
                         <Text
+                          allowFontScaling={false}
                           style={[
                             styles.btnText,
                             {
@@ -5374,6 +5379,7 @@ class HomeScreen extends Component {
                       </View>
                       <View style={{justifyContent: 'center'}}>
                         <Text
+                          allowFontScaling={false}
                           style={[
                             styles.btnText,
                             {

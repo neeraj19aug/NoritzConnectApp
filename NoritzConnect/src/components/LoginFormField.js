@@ -83,7 +83,7 @@ const LoginFormField = ({
             onBlur={() => setFocusState(false)}
             autoCorrect={false}
             keyboardType={keyboardType}
-            autoCapitalize={false}
+            autoCapitalize={'none'}
             secureTextEntry={secureTextEntry}
           />
         </View>
@@ -144,7 +144,7 @@ const styles = {
 
     fontFamily: Fonts.oxygenRegular,
     paddingLeft: 15,
-    colot: '#4A4A4A',
+    color: '#4A4A4A',
     height: 50,
     marginTop: 0,
     flex: 1,

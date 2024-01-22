@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { getColors } from '../../services/Color';

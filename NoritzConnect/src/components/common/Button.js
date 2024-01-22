@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, Platform} from 'react-native';
 import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';

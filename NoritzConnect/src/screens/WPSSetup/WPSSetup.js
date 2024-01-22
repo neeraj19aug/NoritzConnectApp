@@ -307,7 +307,7 @@ class WPSSetupScreen extends Component {
         <View style={styles.txtWaitingForHeaterBG}>
           <Text
             allowFontScaling={false}
-            style={[styles.txtHeading, {color: getColors().cellTitleColor}]}>
+            style={[styles.txtHeading, {color: getColors().cellTitleColor, lineHeight: wp('6%')}]}>
             {Strings.txtWaitingForHeater}
           </Text>
           <Text

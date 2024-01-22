@@ -316,6 +316,7 @@ class RouterSetupScreen extends Component {
                   allowFontScaling={false}
                   style={[
                     styles.txtTitle,
+                    {lineHeight: wp('6%')},
                     {color: getColors().primaryBlackColor},
                   ]}>
                   {Strings.txtSetupUsingWPS}
@@ -347,6 +348,7 @@ class RouterSetupScreen extends Component {
                   allowFontScaling={false}
                   style={[
                     styles.txtTitle,
+                    {lineHeight: wp('6%')},
                     {color: getColors().primaryBlackColor},
                   ]}>
                   {Strings.txtManualRouterSetup}

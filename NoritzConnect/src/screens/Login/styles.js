@@ -4,6 +4,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {isIphoneXorAbove} from '../../services/Utils';
+import {Platform} from 'react-native';
 
 const styles = {
   pageContainer: {
@@ -126,11 +127,13 @@ const styles = {
   txtRegister: {
     fontFamily: Fonts.oxygenBold,
     fontSize: wp('4.5%'),
+    lineHeight: wp('5.3%')
   },
   btnText: {
     fontFamily: Fonts.oxygenBold,
     fontSize: wp('5%'),
     color: 'white',
+    lineHeight: Platform.OS == 'android' ? wp('6%') : null
   },
   setPadding: {
     padding: 10,

@@ -63,7 +63,6 @@ class WifiSetupScreen extends Component {
 
   componentDidMount() {
 
-    WifiManager.setEnabled(true);
 
 
     AppState.addEventListener('change', this._handleAppStateChange);
@@ -262,6 +261,8 @@ class WifiSetupScreen extends Component {
         this.props.navigation.navigate('RouterSetup');
       } else {
         if (Platform.OS === 'android') {
+          WifiManager.setEnabled(true);
+
           AndroidOpenSettings.wifiSettings();
           // Linking.openSettings();
         } else {

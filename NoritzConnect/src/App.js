@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { eventEmitter, DarkModeProvider } from 'react-native-dark-mode';
-import { StatusBar, StyleSheet, View, TouchableOpacity, Text, Platform, TextInput, Linking1234
+import { StatusBar, StyleSheet, View, TouchableOpacity, Text, Platform, TextInput, Linking
  } from 'react-native';
 import { Provider } from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
@@ -184,6 +184,9 @@ this.getAppVersionData()
 
           let timezone = response.data.timezone;
           timezone = await decryptValue(timezone);
+
+          let android_timezone = response.data.android_timezone;
+          android_timezone = await decryptValue(android_timezone);
   
           let maintenance_start = response.data.maintenance_start;
           maintenance_start = await decryptValue(maintenance_start);
@@ -202,16 +205,17 @@ this.getAppVersionData()
           setInterval(() => {
             console.log('ismaintainance check')
             console.log('timeZone is---', timezone)
+            console.log('android_timezone is---', android_timezone)
 
             var date = ""
 
             if (Platform.OS == 'ios') {
             date = new Date();
             date = date.toLocaleString('en-US', {
-              timeZone: 'PST',
+              timeZone: timezone,
             });
             } else {
-              const targetTimezone = 'America/Los_Angeles';
+              const targetTimezone = android_timezone;//'America/Los_Angeles';
 
               // Get the current time in the specified timezone
               date = moment.tz(new Date(), targetTimezone).format('MM/DD/YYYY hh:mm:ss A');
@@ -239,10 +243,12 @@ this.getAppVersionData()
             console.log('current date ', currentDate);
 
             var startDate = Moment(maintenance_start.toString(), 'YYYY-MM-DD');
-            var current = Moment(currentDate.toString(), 'YYYY-MM-DD HH:mm');
+            var current = Moment(currentDate.toString(), 'YYYY-MM-DD');
             var endDate = Moment(maintenance_end.toString(), 'YYYY-MM-DD');
             
-            const isMaintenance = current.isBetween(startDate, endDate);
+            // const isMaintenance = current.isBetween(startDate, endDate);
+            const isMaintenance = current.isSameOrAfter(startDate) && current.isSameOrBefore(endDate);
+
             
             var showMaintainancePopup = false;  
 // Output the result
@@ -262,7 +268,7 @@ if (isMaintenance) {
     showMaintainancePopup = true;  
 
   } else {
-    console.log('No maintenance is currently scheduled.');
+    console.log('No maintenance is currently ongoing.');
     showMaintainancePopup = false;    }
 
 } else {
@@ -330,6 +336,8 @@ this.setState({
   .catch((error) => {
     console.error("Error fetching version data:", error);
   });
+    
+    
   }
 
   componentWillUnmount() {
@@ -439,14 +447,25 @@ this.setState({
 
     } else if (this.state.recommend_update == 1) {
       console.log('recommend_update ******');
-      if (this.state.allow_app_access == 1) {
-        this.setState({
-          isVisibleMaintainancePopup: false
-        })
+      var url = ""
+      if (Platform.OS == 'android') {
+        url = "https://play.google.com/store/apps/details?id=com.noritz.iot&hl=en&gl=US"
+        
       } else {
-        RNExitApp.exitApp();
+        url = "https://apps.apple.com/us/app/noritz-connect/id1227949334"
+      }
 
-       }
+      Linking.canOpenURL(url)
+        .then(supported => {
+          if (!supported) {
+            console.log(`Can't handle url: ${url}`);
+          } else {
+            return Linking.openURL(url);
+          }
+        })
+        .catch(err => console.log('An error occurred', err));
+  
+   
     } else {
       // this.setState({
       //   isVisibleMaintainancePopup: false
@@ -472,7 +491,29 @@ this.setState({
 
         
 
-        <View style={{width: '100%', alignItems: 'flex-end'}}>
+        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+          
+          {this.state.recommend_update == 1 ? 
+            <TouchableOpacity
+            style={styles.cancelMaintainancePopup}
+              onPress={() => {
+                this.setState({
+                  isVisibleMaintainancePopup: false,
+                  dontAskAgain: true
+                })
+            }}>
+            <Text
+              allowFontScaling={false}
+              style={[
+                styles.closeTemperaturePopup,
+                {color: 'gray'},
+              ]}>
+            {'Cancel'}
+            </Text>
+            </TouchableOpacity>
+          : null
+            
+          }
         <TouchableOpacity
           style={styles.cancelMaintainancePopup}
           onPress={() => this.maintainancePopupOButtonClick()}>
@@ -521,12 +562,133 @@ this.setState({
         
         const versionDataObj = JSON.parse(versionData);
         console.log("Storage data found", versionDataObj);
+
+        let is_maintenance = versionDataObj.is_maintenance;
+        is_maintenance = await decryptValue(is_maintenance);        
+        console.log('is_maintenance check', is_maintenance);
+        
+          let popup_text = versionDataObj.popup_text;
+          popup_text = await decryptValue(popup_text);
+  
+          let allow_app_access = versionDataObj.allow_app_access;
+          allow_app_access = await decryptValue(allow_app_access);
+          console.log('allow_app_access check', allow_app_access);
+
+          let button_text = versionDataObj.button_text;
+          button_text = await decryptValue(button_text);
+  
+          let popup_title = versionDataObj.popup_title;
+          popup_title = await decryptValue(popup_title);
+
+          let timezone = versionDataObj.timezone;
+          timezone = await decryptValue(timezone);
+
+          let android_timezone = versionDataObj.android_timezone;
+          android_timezone = await decryptValue(android_timezone);
+  
+          let maintenance_start = versionDataObj.maintenance_start;
+          maintenance_start = await decryptValue(maintenance_start);
+  
+          let maintenance_end = versionDataObj.maintenance_end;
+          maintenance_end = await decryptValue(maintenance_end);
+
+          let maintenance_start_time = versionDataObj.maintenance_start_time;
+          maintenance_start_time = await decryptValue(maintenance_start_time);
+  
+          let maintenance_end_time = versionDataObj.maintenance_end_time;
+          maintenance_end_time = await decryptValue(maintenance_end_time);
+  
+            console.log('ismaintainance check')
+            console.log('timeZone is---', timezone)
+            console.log('android_timezone is---', android_timezone)
+
+            var date = ""
+
+            if (Platform.OS == 'ios') {
+            date = new Date();
+            date = date.toLocaleString('en-US', {
+              timeZone: timezone,
+            });
+            } else {
+              const targetTimezone = android_timezone;//'America/Los_Angeles';
+
+              // Get the current time in the specified timezone
+              date = moment.tz(new Date(), targetTimezone).format('MM/DD/YYYY hh:mm:ss A');
+              console.log('newTime ', date)
+     
+            }
+            
+
+            if (this.state.dontAskAgain == true) {
+              return
+            }
+            
+            console.log('maintenance_start ', maintenance_start)
+            console.log('maintenance_start_time ', maintenance_start_time)
+            console.log('maintenance_end ', maintenance_end)
+            console.log('maintenance_end_time ', maintenance_end_time)
+            
+
+            let currentDate = Moment(date, 'MM/DD/YYYY hh:mm:ss A').format(
+              'YYYY-MM-DD HH:mm',
+            );
+            console.log('current date ', currentDate);
+
+            var startDate = Moment(maintenance_start.toString(), 'YYYY-MM-DD');
+            var current = Moment(currentDate.toString(), 'YYYY-MM-DD');
+            var endDate = Moment(maintenance_end.toString(), 'YYYY-MM-DD');
+            
+            // const isMaintenance = current.isBetween(startDate, endDate);
+            const isMaintenance = current.isSameOrAfter(startDate) && current.isSameOrBefore(endDate);
+
+            
+            var showMaintainancePopup = false;  
+// Output the result
+if (isMaintenance) {
+  console.log('Maintenance is currently ongoing during dates.');
+  let currentTime = Moment(date, 'MM/DD/YYYY hh:mm:ss A').format(
+    'HH:mm',
+  );
+
+  var startTime = Moment(maintenance_start_time.toString(), 'HH:mm:ss');
+  var time = Moment(currentTime.toString(), 'HH:mm');
+  var endTime = Moment(maintenance_end_time.toString(), 'HH:mm:ss');
+  
+  const isMaintenanceCurrentTime = time.isBetween(startTime, endTime);
+  if (isMaintenanceCurrentTime) {
+    console.log('Maintenance is currently ongoing.');
+    showMaintainancePopup = true;  
+
+  } else {
+    console.log('No maintenance is currently ongoing.');
+    showMaintainancePopup = false;    }
+
+} else {
+  console.log('No maintenance is currently scheduled.');
+  showMaintainancePopup = false;  }
+
+this.setState({
+  isVisibleMaintainancePopup: showMaintainancePopup,
+  popup_text: popup_text,
+  button_text: button_text,
+  popup_title: popup_title,
+  allow_app_access: allow_app_access,
+  is_maintenance: is_maintenance,
+  timezone: timezone,
+  maintenance_start: maintenance_start,
+  maintenance_end: maintenance_end
+});
+          
+
+
+
+
        
       } else {
         console.log("Storage data null");
       }
     } catch (e) {
-      console.log("Storage data error");
+      console.log("Storage data error", e.message);
     }
   }
 
@@ -681,7 +843,7 @@ const styles = StyleSheet.create({
   },
   cancelMaintainancePopup: {
    
-    width: wp('20%'),
+    width: wp('18%'),
     marginTop: 20
     // height: hp('5%'),
   },

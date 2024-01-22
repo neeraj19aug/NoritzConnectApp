@@ -19,6 +19,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Linking,
+  BackHandler
 } from 'react-native';
 import {
   appleAuth,
@@ -37,6 +38,7 @@ import Strings from '../../services/Strings';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
 import FastImage from 'react-native-fast-image';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 const {RNTwitterSignIn} = NativeModules;
 
 const Constants = {
@@ -52,8 +54,8 @@ class LoginScreen extends Component {
     }
 
     this.state = {
-      email: 'qwerty@bytelaunch.com',
-      password: 'qwerty',
+      email: '',
+      password: '',
       rememberMe: false,
       isVisibleRevokePopup: false,
       isVisibleMaintainancePopup: false,
@@ -76,12 +78,34 @@ class LoginScreen extends Component {
     this.focusCall = this.props.navigation.addListener('focus', () => {
       setConfiguration('homescreenLoaded', 'false');
       setConfiguration('navigation', this.props.navigation);
+
+      try {
+        BackHandler.addEventListener(
+          'hardwareBackPress',
+          this.handleBackButtonClick.bind(this),
+        );        
+      } catch (e) {
+        console.log(e);
+      }
+
     });
     // this.getAppVersionDataAPI();
+     
   }
 
   componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
     this.focusCall();
+  }
+
+  handleBackButtonClick() {
+    
+    BackHandler.exitApp();
+
+    return true;
   }
 
   _twitterSignIn = () => {
@@ -967,13 +991,15 @@ class LoginScreen extends Component {
               </Text>
             </TouchableOpacity>
 
+            {Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 13 ? (
             <View style={styles.orViewContainer}>
               <View style={styles.orLineView} />
               <Text allowFontScaling={false} style={[styles.txtOr]}>
                 {Strings.txtOR}
               </Text>
               <View style={styles.orLineView} />
-            </View>
+              </View>
+            ) : null}
 
             {Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 13 ? (
               <AppleButton
@@ -985,22 +1011,22 @@ class LoginScreen extends Component {
                 onPress={() => this.onAppleButtonPress()}
               />
             ) : null}
-
+{/* 
             <Button
               title={Strings.txtSigninWithFacebook}
               textStyle={styles.btnText}
               containerBackgroundColor={getColors().faceBookColor}
               onPress={this.onPressFacebookButton}
               containerStyle={styles.faceBookBtnStyle}
-            />
+            /> */}
 
-            <Button
+            {/* <Button
               title={Strings.txtSigninWithTwitter}
               textStyle={styles.btnText}
               containerBackgroundColor={getColors().twitterColor}
               onPress={this._twitterSignIn}
               containerStyle={styles.faceBookBtnStyle}
-            />
+            /> */}
 
             <TouchableOpacity
               onPress={this.goToRegisterScreen}

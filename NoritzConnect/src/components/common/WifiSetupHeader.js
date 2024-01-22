@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.oxygenBold,
     // fontWeight: '400',
     fontSize: wp('4.34%'),
+    lineHeight: wp('5.1%')
   },
 
 

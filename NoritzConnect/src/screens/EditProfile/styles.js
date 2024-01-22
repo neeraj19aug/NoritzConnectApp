@@ -147,7 +147,8 @@ const styles = {
     fontFamily: Fonts.oxygenBold,
     fontSize: wp('4.5%'),
     textAlign: 'center',
-    paddingTop: hp('2%')
+    paddingTop: hp('2%'),
+    lineHeight: wp('5.3%')
   },
 };
 

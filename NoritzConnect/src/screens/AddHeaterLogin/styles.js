@@ -84,6 +84,7 @@ const styles = {
     fontFamily: Fonts.oxygenBold,
     fontSize: wp('4.3%'),
     textAlign: 'center',
+    lineHeight: wp('5.3%')
   },
 };
 
