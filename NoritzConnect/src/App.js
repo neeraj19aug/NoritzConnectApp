@@ -676,7 +676,24 @@ if (isMaintenance) {
   var time = Moment(currentTime.toString(), 'HH:mm');
   var endTime = Moment(maintenance_end_time.toString(), 'HH:mm:ss');
   
-  const isMaintenanceCurrentTime = time.isBetween(startTime, endTime);
+
+
+  const getHoursAndMinutes = (date) => {
+    const timeString = date.toISOString();
+    const hours = parseInt(timeString.substring(11, 13));
+    const minutes = parseInt(timeString.substring(14, 16));
+    return hours * 60 + minutes; // Convert hours to minutes and add minutes
+  };
+  
+  const startMinutes = getHoursAndMinutes(startTime);
+  const endMinutes = getHoursAndMinutes(endTime);
+  const currentMinutes = getHoursAndMinutes(time);
+  
+  const isMaintenanceCurrentTime = currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+  
+
+
+  // const isMaintenanceCurrentTime = time.isBetween(startTime, endTime);
   if (isMaintenanceCurrentTime) {
     console.log('Maintenance is currently ongoing.');
     showMaintainancePopup = true;  

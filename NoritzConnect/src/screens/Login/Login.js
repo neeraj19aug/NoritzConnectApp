@@ -598,7 +598,7 @@ class LoginScreen extends Component {
               '',
               '',
               '0',
-              '1234567890',
+              getConfiguration('device_token'),
               '',
             )
             .then(() => this.afterCallLoginAPI())
