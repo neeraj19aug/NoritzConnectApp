@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NoritzConnect</string>
-    <string name="facebook_app_id">1076312769549634</string>
-    <string name="facebook_client_token">783f1ff19d01fe190ea8ae0a0069eab3</string>
+    <string name="app_name">Noritz Connect</string>
+<!--    <string name="facebook_app_id">1076312769549634</string>-->
+<!--    <string name="facebook_client_token">783f1ff19d01fe190ea8ae0a0069eab3</string>-->
 </resources>

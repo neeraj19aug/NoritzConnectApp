@@ -16,12 +16,12 @@ import {FormField} from '../../components';
 import {decryptValue, showAlert} from '../../services/Functions';
 import {setConfiguration, getConfiguration} from '../../services/configuration';
 import {md5} from '../../services/Functions';
-import {
-  AccessToken,
-  GraphRequest,
-  GraphRequestManager,
-  LoginManager,
-} from 'react-native-fbsdk';
+// import {
+//   AccessToken,
+//   GraphRequest,
+//   GraphRequestManager,
+//   LoginManager,
+// } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
@@ -139,7 +139,7 @@ class DeleteAccountConfirmation extends Component {
           let message = await decryptValue(response.responseMessage);
           console.log('delete success', data, message);
           if (facebookId !== '') {
-            this.deleteUserProfile(facebookId);
+           // this.deleteUserProfile(facebookId);
           } else {
             console.log('facebook not login');
           }

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {DarkModeContext} from 'react-native-dark-mode';
-import {
-  AccessToken,
-  GraphRequest,
-  GraphRequestManager,
-  LoginManager,
-} from 'react-native-fbsdk';
+// import {
+//   AccessToken,
+//   GraphRequest,
+//   GraphRequestManager,
+//   LoginManager,
+// } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {
@@ -39,12 +39,12 @@ import Dialog, {DialogContent} from 'react-native-popup-dialog';
 import FastImage from 'react-native-fast-image';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-const {RNTwitterSignIn} = NativeModules;
+// const {RNTwitterSignIn} = NativeModules;
 
-const Constants = {
-  TWITTER_CONSUMER_KEY: 'sCySOWkXCJePAenNMlRBKhhpu', //'TBjMgh3V9SLxzEvVoWzjqu3me', //
-  TWITTER_CONSUMER_SECRET: '0WnmgV6S8m6MlGmW9IeuPxWLGbuvz3EAnzn4B2MXPLsKhaMW8O', //'9QGv8sTkkJCyM28sFUGJO8AvBEuWQZIg4yMzawwHrFX53RUrAi',
-};
+// const Constants = {
+//   TWITTER_CONSUMER_KEY: 'sCySOWkXCJePAenNMlRBKhhpu', //'TBjMgh3V9SLxzEvVoWzjqu3me', //
+//   TWITTER_CONSUMER_SECRET: '0WnmgV6S8m6MlGmW9IeuPxWLGbuvz3EAnzn4B2MXPLsKhaMW8O', //'9QGv8sTkkJCyM28sFUGJO8AvBEuWQZIg4yMzawwHrFX53RUrAi',
+// };
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -73,7 +73,7 @@ class LoginScreen extends Component {
     setConfiguration('navigation', this.props.navigation);
     setConfiguration('newHeaterAdded', 'false');
     setConfiguration('slotsUpdated', 'false');
-    this.getRevokePermissionFromStorage();
+    // this.getRevokePermissionFromStorage();
     this.getCredentialsFromStorage();
     this.focusCall = this.props.navigation.addListener('focus', () => {
       setConfiguration('homescreenLoaded', 'false');
@@ -108,52 +108,52 @@ class LoginScreen extends Component {
     return true;
   }
 
-  _twitterSignIn = () => {
-    NetInfo.fetch().then((state) => {
-      if (state.isConnected) {
-        RNTwitterSignIn.init(
-          Constants.TWITTER_CONSUMER_KEY,
-          Constants.TWITTER_CONSUMER_SECRET,
-        );
-        RNTwitterSignIn.logIn()
-          .then((loginData) => {
-            const {authToken, authTokenSecret, email, userID, userName} =
-              loginData;
-            if (authToken && authTokenSecret) {
-              setConfiguration('socialName', userName);
-              setConfiguration('socialEmail', email);
-              setConfiguration('facebookId', '');
-              setConfiguration('twitterId', userID);
-              setConfiguration('appleId', '');
+  // _twitterSignIn = () => {
+  //   NetInfo.fetch().then((state) => {
+  //     if (state.isConnected) {
+  //       RNTwitterSignIn.init(
+  //         Constants.TWITTER_CONSUMER_KEY,
+  //         Constants.TWITTER_CONSUMER_SECRET,
+  //       );
+  //       RNTwitterSignIn.logIn()
+  //         .then((loginData) => {
+  //           const {authToken, authTokenSecret, email, userID, userName} =
+  //             loginData;
+  //           if (authToken && authTokenSecret) {
+  //             setConfiguration('socialName', userName);
+  //             setConfiguration('socialEmail', email);
+  //             setConfiguration('facebookId', '');
+  //             setConfiguration('twitterId', userID);
+  //             setConfiguration('appleId', '');
 
-              this.props
-                .loginUser(
-                  email,
-                  '',
-                  '',
-                  userID,
-                  '2',
-                  getConfiguration('device_token'),
-                  '',
-                )
-                .then(() => this.afterCallLoginAPI())
-                .catch((e) =>
-                  showAlert(
-                    'It seems something went wrong on the server. Please try after some time.',
-                    300,
-                  ),
-                );
-            }
-          })
-          .catch(error => {
-            console.log(error)
-          }
-          );
-      } else {
-        showAlert(Strings.networkError, 300);
-      }
-    });
-  };
+  //             this.props
+  //               .loginUser(
+  //                 email,
+  //                 '',
+  //                 '',
+  //                 userID,
+  //                 '2',
+  //                 getConfiguration('device_token'),
+  //                 '',
+  //               )
+  //               .then(() => this.afterCallLoginAPI())
+  //               .catch((e) =>
+  //                 showAlert(
+  //                   'It seems something went wrong on the server. Please try after some time.',
+  //                   300,
+  //                 ),
+  //               );
+  //           }
+  //         })
+  //         .catch(error => {
+  //           console.log(error)
+  //         }
+  //         );
+  //     } else {
+  //       showAlert(Strings.networkError, 300);
+  //     }
+  //   });
+  // };
 
   async onAppleButtonPress() {
     // performs login request
