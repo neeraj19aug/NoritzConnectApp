@@ -16,12 +16,12 @@ import {FormField} from '../../components';
 import {decryptValue, showAlert} from '../../services/Functions';
 import {setConfiguration, getConfiguration} from '../../services/configuration';
 import {md5} from '../../services/Functions';
-import {
-  AccessToken,
-  GraphRequest,
-  GraphRequestManager,
-  LoginManager,
-} from 'react-native-fbsdk';
+// import {
+//   AccessToken,
+//   GraphRequest,
+//   GraphRequestManager,
+//   LoginManager,
+// } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
@@ -71,30 +71,30 @@ class DeleteAccountConfirmation extends Component {
     // }
 
     // facebook
-    AccessToken.getCurrentAccessToken()
-      .then((data) => {
-        console.log('access token', data);
-        let logout = new GraphRequest(
-          'me/permissions/',
-          {
-            accessToken: data.accessToken.toString(),
-            httpMethod: 'DELETE',
-          },
-          (error, result) => {
-            if (error) {
-              console.log('Error fetching data: ' + error.toString());
-            } else {
-              LoginManager.logOut();
-              // callback(true, null)
-            }
-          },
-        );
-        new GraphRequestManager().addRequest(logout).start();
-      })
-      .catch((error) => {
-        //  callback(null, error)
-        console.log(error);
-      });
+    // AccessToken.getCurrentAccessToken()
+    //   .then((data) => {
+    //     console.log('access token', data);
+    //     let logout = new GraphRequest(
+    //       'me/permissions/',
+    //       {
+    //         accessToken: data.accessToken.toString(),
+    //         httpMethod: 'DELETE',
+    //       },
+    //       (error, result) => {
+    //         if (error) {
+    //           console.log('Error fetching data: ' + error.toString());
+    //         } else {
+    //           // LoginManager.logOut();
+    //           // callback(true, null)
+    //         }
+    //       },
+    //     );
+    //     new GraphRequestManager().addRequest(logout).start();
+    //   })
+    //   .catch((error) => {
+    //     //  callback(null, error)
+    //     console.log(error);
+    //   });
 
     // Promise.all([facebookPromise, googlePromise])
     //   .then(results => {

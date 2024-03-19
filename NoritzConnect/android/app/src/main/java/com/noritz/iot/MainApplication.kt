@@ -38,7 +38,7 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
-      FacebookSdk.sdkInitialize(this.applicationContext);
+//      FacebookSdk.sdkInitialize(this.applicationContext);
 
       SoLoader.init(this, false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {

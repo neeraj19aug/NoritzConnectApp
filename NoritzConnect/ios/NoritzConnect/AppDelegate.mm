@@ -1,6 +1,6 @@
 #import "AppDelegate.h"
 #import <React/RCTBundleURLProvider.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+//#import <FBSDKCoreKit/FBSDKCoreKit.h>
 //#import <TwitterKit/TWTRKit.h>
 //#import <TwitterCore/TwitterCore.h>
 #import <Firebase.h>
@@ -34,7 +34,10 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
-  return [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options];
+  return true;
+  
+  
+  //[[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options];
   
   
 //  || [[Twitter sharedInstance] application:application openURL:url options:options];

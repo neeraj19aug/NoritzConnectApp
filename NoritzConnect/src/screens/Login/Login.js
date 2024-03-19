@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {DarkModeContext} from 'react-native-dark-mode';
-import {
-  AccessToken,
-  GraphRequest,
-  GraphRequestManager,
-  LoginManager,
-} from 'react-native-fbsdk';
+// import {
+//   AccessToken,
+//   GraphRequest,
+//   GraphRequestManager,
+//   LoginManager,
+// } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {
@@ -296,81 +296,81 @@ class LoginScreen extends Component {
     }
   }
 
-  handleFacebookLogin() {
-    const that2 = this;
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      (result1) => {
-        if (result1.isCancelled) {
-          console.log('Login cancelled');
-        } else {
-          AccessToken.getCurrentAccessToken().then((data) => {
-            const {accessToken} = data;
-            // alert(accessToken.toString())
+  // handleFacebookLogin() {
+  //   const that2 = this;
+  //   LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+  //     (result1) => {
+  //       if (result1.isCancelled) {
+  //         console.log('Login cancelled');
+  //       } else {
+  //         AccessToken.getCurrentAccessToken().then((data) => {
+  //           const {accessToken} = data;
+  //           // alert(accessToken.toString())
 
-            const responseInfoCallback = (error, result) => {
-              if (error) {
-                console.log(error);
-                showAlert(`Error fetching data: ${error.toString()}`, 300);
-              } else {
-                console.log(result);
-                // alert('Success fetching data: ' + result.toString());
+  //           const responseInfoCallback = (error, result) => {
+  //             if (error) {
+  //               console.log(error);
+  //               showAlert(`Error fetching data: ${error.toString()}`, 300);
+  //             } else {
+  //               console.log(result);
+  //               // alert('Success fetching data: ' + result.toString());
 
-                // var user = data.credentials;
-                const api = `https://graph.facebook.com/v2.3/${result.id}?fields=name,email,picture&access_token=${accessToken}`;
+  //               // var user = data.credentials;
+  //               const api = `https://graph.facebook.com/v2.3/${result.id}?fields=name,email,picture&access_token=${accessToken}`;
 
-                fetch(api)
-                  .then((response) => response.json())
-                  .then((responseData) => {
-                    setConfiguration('socialName', responseData.name);
-                    setConfiguration('socialEmail', responseData.email);
-                    setConfiguration('facebookId', responseData.id);
-                    setConfiguration('twitterId', '');
-                    setConfiguration('appleId', '');
+  //               fetch(api)
+  //                 .then((response) => response.json())
+  //                 .then((responseData) => {
+  //                   setConfiguration('socialName', responseData.name);
+  //                   setConfiguration('socialEmail', responseData.email);
+  //                   setConfiguration('facebookId', responseData.id);
+  //                   setConfiguration('twitterId', '');
+  //                   setConfiguration('appleId', '');
 
-                    that2.props
-                      .loginUser(
-                        responseData.email,
-                        '',
-                        responseData.id,
-                        '',
-                        '1',
-                        getConfiguration('device_token'),
-                        '',
-                      )
-                      .then(() => that2.afterCallLoginAPI())
-                      .catch((e) =>
-                        showAlert(
-                          'It seems something went wrong on the server. Please try after some time.',
-                          300,
-                        ),
-                      );
-                  });
-              }
-            };
+  //                   that2.props
+  //                     .loginUser(
+  //                       responseData.email,
+  //                       '',
+  //                       responseData.id,
+  //                       '',
+  //                       '1',
+  //                       getConfiguration('device_token'),
+  //                       '',
+  //                     )
+  //                     .then(() => that2.afterCallLoginAPI())
+  //                     .catch((e) =>
+  //                       showAlert(
+  //                         'It seems something went wrong on the server. Please try after some time.',
+  //                         300,
+  //                       ),
+  //                     );
+  //                 });
+  //             }
+  //           };
 
-            const infoRequest = new GraphRequest(
-              '/me',
-              {
-                accessToken,
-                parameters: {
-                  fields: {
-                    string: 'email,name,first_name,middle_name,last_name',
-                  },
-                },
-              },
-              responseInfoCallback,
-            );
+  //           const infoRequest = new GraphRequest(
+  //             '/me',
+  //             {
+  //               accessToken,
+  //               parameters: {
+  //                 fields: {
+  //                   string: 'email,name,first_name,middle_name,last_name',
+  //                 },
+  //               },
+  //             },
+  //             responseInfoCallback,
+  //           );
 
-            // Start the graph request.
-            new GraphRequestManager().addRequest(infoRequest).start();
-          });
-        }
-      },
-      (error) => {
-        console.log(`Login fail with error: ${error}`);
-      },
-    );
-  }
+  //           // Start the graph request.
+  //           new GraphRequestManager().addRequest(infoRequest).start();
+  //         });
+  //       }
+  //     },
+  //     (error) => {
+  //       console.log(`Login fail with error: ${error}`);
+  //     },
+  //   );
+  // }
 
   onPressFacebookButton = () => {
     NetInfo.fetch().then((state) => {
