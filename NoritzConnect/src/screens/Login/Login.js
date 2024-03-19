@@ -19,7 +19,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Linking,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import {
   appleAuth,
@@ -38,13 +38,28 @@ import Strings from '../../services/Strings';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
 import FastImage from 'react-native-fast-image';
 import { faL } from '@fortawesome/free-solid-svg-icons';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-const {RNTwitterSignIn} = NativeModules;
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+// import { DatePicker } from 'react-native-date-picker'
+// import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+// const {RNTwitterSignIn} = NativeModules;
+
+// import WebView from 'react-native-webview';
+// import axios from 'axios';
+// import oauthSignature from 'oauth-signature';
+// import crypto from './crypto';
+
 
 const Constants = {
   TWITTER_CONSUMER_KEY: 'sCySOWkXCJePAenNMlRBKhhpu', //'TBjMgh3V9SLxzEvVoWzjqu3me', //
   TWITTER_CONSUMER_SECRET: '0WnmgV6S8m6MlGmW9IeuPxWLGbuvz3EAnzn4B2MXPLsKhaMW8O', //'9QGv8sTkkJCyM28sFUGJO8AvBEuWQZIg4yMzawwHrFX53RUrAi',
 };
+
+const requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
+const TWITTER_CONSUMER_KEY = 'sCySOWkXCJePAenNMlRBKhhpu';
+const TWITTER_CONSUMER_SECRET = '0WnmgV6S8m6MlGmW9IeuPxWLGbuvz3EAnzn4B2MXPLsKhaMW8O';
+const oauthCallback = 'https://procard.noritz.com/';
+
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -65,7 +80,10 @@ class LoginScreen extends Component {
       popup_title: '',
       is_maintenance: 0,
       force_update: 0,
-      recommend_update: 0
+      recommend_update: 0,
+      token: '',
+      webViewVisible: false,
+      oauth_verifier: ''
     };
   }
 
@@ -111,44 +129,46 @@ class LoginScreen extends Component {
   _twitterSignIn = () => {
     NetInfo.fetch().then((state) => {
       if (state.isConnected) {
-        RNTwitterSignIn.init(
-          Constants.TWITTER_CONSUMER_KEY,
-          Constants.TWITTER_CONSUMER_SECRET,
-        );
-        RNTwitterSignIn.logIn()
-          .then((loginData) => {
-            const {authToken, authTokenSecret, email, userID, userName} =
-              loginData;
-            if (authToken && authTokenSecret) {
-              setConfiguration('socialName', userName);
-              setConfiguration('socialEmail', email);
-              setConfiguration('facebookId', '');
-              setConfiguration('twitterId', userID);
-              setConfiguration('appleId', '');
 
-              this.props
-                .loginUser(
-                  email,
-                  '',
-                  '',
-                  userID,
-                  '2',
-                  getConfiguration('device_token'),
-                  '',
-                )
-                .then(() => this.afterCallLoginAPI())
-                .catch((e) =>
-                  showAlert(
-                    'It seems something went wrong on the server. Please try after some time.',
-                    300,
-                  ),
-                );
-            }
-          })
-          .catch(error => {
-            console.log(error)
-          }
-          );
+        this.startAuth();        
+        // RNTwitterSignIn.init(
+        //   Constants.TWITTER_CONSUMER_KEY,
+        //   Constants.TWITTER_CONSUMER_SECRET,
+        // );
+        // RNTwitterSignIn.logIn()
+        //   .then((loginData) => {
+        //     const {authToken, authTokenSecret, email, userID, userName} =
+        //       loginData;
+        //     if (authToken && authTokenSecret) {
+        //       setConfiguration('socialName', userName);
+        //       setConfiguration('socialEmail', email);
+        //       setConfiguration('facebookId', '');
+        //       setConfiguration('twitterId', userID);
+        //       setConfiguration('appleId', '');
+
+        //       this.props
+        //         .loginUser(
+        //           email,
+        //           '',
+        //           '',
+        //           userID,
+        //           '2',
+        //           getConfiguration('device_token'),
+        //           '',
+        //         )
+        //         .then(() => this.afterCallLoginAPI())
+        //         .catch((e) =>
+        //           showAlert(
+        //             'It seems something went wrong on the server. Please try after some time.',
+        //             300,
+        //           ),
+        //         );
+        //     }
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   }
+        //   );
       } else {
         showAlert(Strings.networkError, 300);
       }
@@ -623,6 +643,8 @@ class LoginScreen extends Component {
     if (response != null) {
       let resCode = response.responseCode;
       resCode = await decryptValue(resCode);
+      console.log('login resCode ---', resCode);
+      console.log('login resMessage ---', response.responseMessage);
       if (resCode == 200) {
         let {user_id} = response;
         user_id = await decryptValue(user_id);
@@ -704,6 +726,228 @@ class LoginScreen extends Component {
   onPressTwitterButton = () => {
     this.props.navigation.navigate('Home');
   };
+
+  generateOauthSignature = (url, params) => {
+    return oauthSignature.generate(
+       'POST',
+       url,
+       params,
+       TWITTER_CONSUMER_SECRET,
+       null,
+       { encodeSignature: false }
+    );
+};
+
+generateOauthHeader = () => {
+    const oauthNonce = crypto.createHmac('sha1', TWITTER_CONSUMER_KEY).update('qqqq').digest('base64')
+    const oauthTimestamp = Math.floor(Date.now() / 1000).toString();
+    const oauthSignatureMethod = 'HMAC-SHA1';
+    const oauthVersion = '1.0';
+    
+    const oauthParams = {
+       oauth_consumer_key: TWITTER_CONSUMER_KEY,
+       oauth_nonce: oauthNonce,
+       oauth_signature_method: oauthSignatureMethod,
+       oauth_timestamp: oauthTimestamp,
+       oauth_version: oauthVersion,
+       oauth_callback: oauthCallback,
+    };
+    
+    const signature = this.generateOauthSignature(requestTokenUrl, oauthParams);
+    const oauthHeader = `OAuth oauth_consumer_key="${encodeURIComponent(TWITTER_CONSUMER_KEY)}", oauth_nonce="${encodeURIComponent(oauthNonce)}", oauth_signature="${encodeURIComponent(signature)}", oauth_signature_method="${encodeURIComponent(oauthSignatureMethod)}", oauth_timestamp="${encodeURIComponent(oauthTimestamp)}", oauth_version="${encodeURIComponent(oauthVersion)}", oauth_callback="${encodeURIComponent(oauthCallback)}"`;
+    console.log(oauthHeader)
+    return oauthHeader;
+};
+
+
+getRequestToken = async () => {
+  try {
+       const oauthHeader = this.generateOauthHeader()
+
+       const response = await axios.post(
+         requestTokenUrl,
+         null,
+         {
+           headers: {
+             Authorization: oauthHeader,
+           },
+         }
+       );
+    
+       return response.data;
+    } catch (error) {
+       console.log('Error fetching request token:', error);
+       throw error;
+    }
+};
+
+
+getAccessToken = async (oauth_verifier, token) => {
+
+  try {
+  
+
+
+    const response = await axios.post(
+      'https://api.twitter.com/oauth/access_token',
+      null,  // Set data to null
+      {
+        params: {
+          oauth_consumer_key: 'sCySOWkXCJePAenNMlRBKhhpu',
+          oauth_token: 'YCsMzwAAAAABHaZuAAABjWhrNNY',
+          oauth_verifier: 'VUDUzCXKVXMQXZs8mWmF6qYUgquG6xxa',
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+    
+
+
+    // const response = await axios.post(
+    //   'https://api.twitter.com/oauth/access_token',
+    //   `oauth_consumer_key=sCySOWkXCJePAenNMlRBKhhpu&oauth_token=YCsMzwAAAAABHaZuAAABjWhrNNY&oauth_verifier=VUDUzCXKVXMQXZs8mWmF6qYUgquG6xxa`,
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded',
+    //     },
+    //     httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+
+    //   }
+    // );
+
+    console.log('response --', response)
+
+  //     const response = await fetch('https://api.twitter.com/oauth/access_token', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //       body: `oauth_consumer_key=sCySOWkXCJePAenNMlRBKhhpu&oauth_token=${token}&oauth_verifier=${oauth_verifier}`,
+  //     });
+
+  // console.log('oauth_token --', token)
+  // console.log('oauth_verifier --', oauth_verifier)
+
+
+  // if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
+
+  //     const data = await response.text();
+  //     return data   
+    } catch (error) {
+      console.error('Error fetching access token:', error);
+    }
+};
+
+
+
+  startAuth = () => {
+    this.setState({
+      token: '',
+      oauth_verifier: ''
+    });
+    this.getRequestToken().then(data => {
+  console.log(data)
+
+  let parts = data.split('&');
+        let tokenPart = parts.find(part => part.startsWith('oauth_token='));
+        let tokenValue = tokenPart.split('=')[1];
+  console.log(tokenValue);
+  this.setState({
+    token: tokenValue,
+    webViewVisible: true
+  });
+});
+};
+
+
+
+handleNavigationStateChange(navState){
+const { url } = navState;
+
+if (url) {
+  let parts = url.split('&');
+  let verifier = parts.find(part => part.startsWith('oauth_verifier='));
+  
+  if (verifier) {
+    let tokenValue = verifier.split('=')[1];
+    this.setState({
+      oauth_verifier: tokenValue
+    });
+  }
+
+  if (this.state.oauth_verifier && this.state.token) {
+    
+    this.setState({
+      webViewVisible: false
+    }, () => {
+      this.getAccessToken(this.state.oauth_verifier, this.state.token).then(data => {
+        console.log("ddddddddd", data)
+
+        const keyValuePairs = data.split('&');
+    
+        let userId, screenName;
+    
+        keyValuePairs.forEach(pair => {
+          if (pair.includes('user_id=')) {
+            userId = pair.split('=')[1];
+          } else if (pair.includes('screen_name=')) {
+            screenName = pair.split('=')[1];
+          }
+        });
+    
+        if (userId && screenName) {
+          console.log('user_id:', userId);
+          console.log('screen_name:', screenName);
+        } else {
+          console.error('user_id or screen_name not found in the data.');
+        }
+        
+        
+        // const response = JSON.parse(jsonString);
+
+        // console.log("response", response)
+        // console.log("response.screen_name", response.screen_name)
+
+
+              setConfiguration('socialName', screenName);
+              setConfiguration('socialEmail', '');
+              setConfiguration('facebookId', '');
+              setConfiguration('twitterId', userId);
+              setConfiguration('appleId', '');
+              console.log('setConfiguration done:');
+              this.props
+                .loginUser(
+                  screenName,
+                  '',
+                  '',
+                  userId,
+                  '2',
+                  getConfiguration('device_token'),
+                  '',
+                )
+                .then(() => this.afterCallLoginAPI())
+                .catch((e) =>
+                  showAlert(
+                    'It seems something went wrong on the server. Please try after some time.',
+                    300,
+                  ),
+                );
+
+       
+      })
+    });
+   
+   
+  }
+}
+};
+
+
+
 
   appleClick() {
     const url = 'https://support.apple.com/en-us/HT210426';
@@ -898,6 +1142,8 @@ class LoginScreen extends Component {
               style={styles.imgLogoStyle}
             />
 
+            
+
             <LoginFormField
               refer={(e) => {
                 this.emailField = e;
@@ -1011,14 +1257,14 @@ class LoginScreen extends Component {
                 onPress={() => this.onAppleButtonPress()}
               />
             ) : null}
-{/* 
-            <Button
+
+            {/* <Button
               title={Strings.txtSigninWithFacebook}
               textStyle={styles.btnText}
               containerBackgroundColor={getColors().faceBookColor}
               onPress={this.onPressFacebookButton}
               containerStyle={styles.faceBookBtnStyle}
-            /> */}
+            />  */}
 
             {/* <Button
               title={Strings.txtSigninWithTwitter}
@@ -1042,6 +1288,18 @@ class LoginScreen extends Component {
                 {Strings.txtSignUp}
               </Text>
             </TouchableOpacity>
+
+
+            {/* {this.state.webViewVisible ? (
+              <View style={{position: 'absolute', top: 80, left: 0, right: 0, bottom: 0}}>
+                  <WebView nativeConfig={{props: {webContentsDebuggingEnabled: true}}}
+                  source={{ uri: `https://api.twitter.com/oauth/authenticate?oauth_token=${this.state.token}` }}
+                  incognito={true}
+                  onNavigationStateChange={(navState) => this.handleNavigationStateChange(navState)} />
+                </View>
+      ) : null } */}
+
+
 
             {this.props.isBusyLogin ||
             this.props.isBusyForgot ||
@@ -1078,6 +1336,11 @@ class LoginScreen extends Component {
                 style={{width: '40%', height: hp('10%'), marginTop: -40}}
               />
             </View> */}
+
+
+
+
+
           </KeyboardAvoidingView>
         )}
       </DarkModeContext.Consumer>
@@ -1086,3 +1349,4 @@ class LoginScreen extends Component {
 }
 
 export default LoginScreen;
+

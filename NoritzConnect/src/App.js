@@ -175,6 +175,7 @@ this.getAppVersionData()
           let allow_app_access = response.data.allow_app_access;
           allow_app_access = await decryptValue(allow_app_access);
           console.log('allow_app_access check', allow_app_access);
+          console.log('popup_text -----', popup_text);
 
           let button_text = response.data.button_text;
           button_text = await decryptValue(button_text);

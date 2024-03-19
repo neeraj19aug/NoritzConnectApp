@@ -4,7 +4,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAccessoryNavigation} from 'react-native-keyboard-accessory';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import NetInfo from '@react-native-community/netinfo';
-import DatePicker from 'react-native-datepicker';
 import {
   Text,
   View,
@@ -24,6 +23,9 @@ import {decryptValue, showAlert} from '../../services/Functions';
 import Activity from '../../components/ActivityIndicator';
 import {getConfiguration} from '../../services/configuration';
 import Strings from '../../services/Strings';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 class WarrantyRegistrationScreen extends Component {
   constructor(props) {
@@ -94,9 +96,9 @@ class WarrantyRegistrationScreen extends Component {
       selectedModelMissing: false,
       gasTypeMissing: false,
       dateOfInstallMissing: false,
+      showDatePicker: false
     };
   }
-
   componentDidMount() {
     const states = getConfiguration('states');
     const gasDetails = getConfiguration('gasDetails');
@@ -1270,8 +1272,14 @@ class WarrantyRegistrationScreen extends Component {
               <TouchableOpacity
                 style={[
                   styles.cellView,
-                  {backgroundColor: getColors().whiteColor},
-                ]}>
+                  { backgroundColor: getColors().whiteColor },
+                ]}
+                onPress={() => {
+                  this.setState({
+                    showDatePicker: true,
+        })
+                }}
+              >
                 <View style={styles.cellInnerLeftView}>
                   <Image
                     resizeMode="contain"
@@ -1303,8 +1311,39 @@ class WarrantyRegistrationScreen extends Component {
                     {Strings.txtSelect}
                   </Text>
                 </View>
+ 
+                  <DateTimePickerModal
+                  isVisible={this.state.showDatePicker}
+                  mode="date"
+                  onConfirm={(date) => {
+                    console.log("selected date --", date);
 
-                <DatePicker
+                    const year = date.getFullYear();
+                    const month = date.getMonth() + 1; // Months are zero-indexed
+                    const day = date.getDate();
+                    let selectedDate = month + "-" + day + "-" + year
+                    console.log("selected date --",selectedDate);
+
+                    this.setState({
+                      dateOfInstall: selectedDate,
+                      dateOfInstallMissing: false,
+                      showDatePicker: false
+                    });
+                  }}
+                  onCancel={() => {
+                    this.setState({
+                      showDatePicker: false
+                    });
+                  }}
+                />
+          
+                
+
+
+               
+
+
+                {/* <DateTimePicker
                   style={styles.datePickerStyle}
                   date={this.state.dateOfInstall}
                   mode="date"
@@ -1327,7 +1366,7 @@ class WarrantyRegistrationScreen extends Component {
                       dateOfInstallMissing: false,
                     });
                   }}
-                />
+                /> */}
               </TouchableOpacity>
 
               <Button
