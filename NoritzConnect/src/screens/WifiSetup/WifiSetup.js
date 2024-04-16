@@ -34,6 +34,7 @@ import {getColors} from '../../services/Color';
 import {showAlert} from '../../services/Functions';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
+import { getConfiguration } from '../../services/configuration';
 const fadeIn = {
   from: {
     opacity: 0,

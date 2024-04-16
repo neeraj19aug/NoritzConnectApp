@@ -26,6 +26,8 @@ import Strings from '../../services/Strings';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import {setConfiguration} from '../../services/configuration';
+
 
 class WarrantyRegistrationScreen extends Component {
   constructor(props) {
@@ -141,11 +143,27 @@ class WarrantyRegistrationScreen extends Component {
       'keyboardDidHide',
       this._keyboardDidHide,
     );
+
+    // Add a "focus" event listener to the navigation prop
+  this.focusListener = this.props.navigation.addListener('focus', () => {
+    // Code to run when the screen gains focus
+    console.log('Screen has gained focus');
+    let check = getConfiguration('warrantyRegister');
+    if (check == 'true') {
+      setConfiguration('warrantyRegister', 'false');
+      this.props.navigation.goBack()
+    }
+    // You can call any method here that you want to run when the screen gains focus
+  });
   }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    // Remove the focus listener
+  // if (this.focusListener) {
+  //   this.focusListener.remove();
+  // }
   }
 
   _keyboardDidShow() {
@@ -388,6 +406,8 @@ class WarrantyRegistrationScreen extends Component {
       if (resCode == 200) {
         var resMessage = response.responseMessage;
         resMessage = await decryptValue(resMessage);
+
+        setConfiguration('warrantyRegister', 'true');
 
         this.props.navigation.navigate('Tutorial');
       } else {
@@ -1193,6 +1213,7 @@ class WarrantyRegistrationScreen extends Component {
                 style={styles.txtModelNumberContainer}>
                 <View style={styles.setModelMonthWidth}>
                   <FormField
+                    editable = {false}
                     refer={instance => (this.serialNumberFieldYear = instance)}
                     title="Serial#"
                     missingField={this.state.serialYearMissing}
@@ -1218,6 +1239,7 @@ class WarrantyRegistrationScreen extends Component {
                 <Text>.</Text>
                 <View style={styles.setModelMonthWidth}>
                   <FormField
+                    editable = {false}
                     refer={instance => (this.serialNumberFieldMonth = instance)}
                     title=""
                     maxLength={2}
@@ -1245,6 +1267,7 @@ class WarrantyRegistrationScreen extends Component {
                 <Text>-</Text>
                 <View style={styles.setModelNumberWidth}>
                   <FormField
+                    editable = {false}
                     refer={instance => (this.serialNumberValueField = instance)}
                     title=""
                     maxLength={6}

@@ -371,7 +371,7 @@ this.setState({
    
     try {
       let userId = '1';
-      let currentVersion = '2.2';
+      let currentVersion = '2.6';
       let platform = Platform.OS;
 
       const url = 'User/getAppVersionData';

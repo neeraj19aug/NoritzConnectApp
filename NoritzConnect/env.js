@@ -7,8 +7,8 @@
 
 import {Platform} from 'react-native';
 
-export const API_ROOT = 'https://noritz-procard-staging.web-preview.xyz/API/IOT'; // Staging
-// export const API_ROOT = 'https://procard.noritz.com/API/IOT'; // live
+// export const API_ROOT = 'https://noritz-procard-staging.web-preview.xyz/API/IOT'; // Staging
+export const API_ROOT = 'https://procard.noritz.com/API/IOT'; // live
 export const cipherSecretKey = 'x%&*';
 export const Apiversion = '2.0';
 export const Devicetype = Platform.OS;

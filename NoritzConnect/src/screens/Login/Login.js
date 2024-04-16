@@ -91,6 +91,8 @@ class LoginScreen extends Component {
     setConfiguration('navigation', this.props.navigation);
     setConfiguration('newHeaterAdded', 'false');
     setConfiguration('slotsUpdated', 'false');
+    setConfiguration('warrantyRegister', 'false');
+
     this.getRevokePermissionFromStorage();
     this.getCredentialsFromStorage();
     this.focusCall = this.props.navigation.addListener('focus', () => {
