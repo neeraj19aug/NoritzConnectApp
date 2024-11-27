@@ -10,10 +10,13 @@ import {
   ScrollView,
   Platform,
   Alert,
+  AppState,
 } from 'react-native';
+
 import {DarkModeContext} from 'react-native-dark-mode';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
+import BackgroundTimer from 'react-native-background-timer';
 import {AreaChart, Grid, YAxis, XAxis} from 'react-native-svg-charts';
 import {
   widthPercentageToDP as wp,
@@ -41,6 +44,10 @@ import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import Strings from '../../services/Strings';
 import Moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 class HomeScreen extends Component {
   HomeScreen = Animatable.createAnimatableComponent(HomeScreen);
@@ -101,6 +108,8 @@ class HomeScreen extends Component {
     this.showTempErrorMessage = true;
     this.ondemandInterval = null;
     this.state = {
+      appState: AppState.currentState, // Initialize with current state
+
       heaterType: 0,
       isRefreshDone: false,
       ondemandValue: 0,
@@ -129,7 +138,7 @@ class HomeScreen extends Component {
       auto_toggle_value: 0,
       ondemand_toggle_state: 0,
       ondemand_toggle_value: 0,
-      ondemand_running: false,
+      ondemand_running: true,
       ondemand_start_time: '',
       ondemand_duration: 0,
       isRefreshHit: false,
@@ -372,7 +381,94 @@ class HomeScreen extends Component {
     };
   }
 
+
+
+
+
+
+
+
+
+
+
+  handleAppStateChange =  (nextAppState) => {
+    if (nextAppState === 'active') {
+      try {
+        AsyncStorage.getItem('On_Demand_Minutes')
+          .then(value => {
+            if (value !== null) {
+              this.setState({ondemand_duration : value })
+            }
+          })
+          .catch(error => {
+            console.error('Error retrieving value:', error);
+          });
+
+        AsyncStorage.getItem('On_Demand_Timer_Starts')
+          .then(value => {
+            if (value !== null) {
+              this.setState({ ondemand_start_time : value })
+            } 
+          })
+          .catch(error => {
+            console.error('Error retrieving value:', error);
+          });
+      
+         
+            var d2 = this.state.ondemand_start_time;
+            let arr = d2.split(' ');
+            let newDate = new Date(arr[0] + 'T' + arr[1] + 'Z');
+    
+            newDate.setMinutes(
+              newDate.getMinutes() + parseInt(this.state.ondemand_duration),
+            );
+    
+            const now = new Date();
+            // UTC Date String
+            now.toUTCString(); // "Sun, 30 May 2021 14:59:15 GMT"
+        
+    
+            let difference = (newDate - now) / 1000;
+            difference = parseInt(difference);
+              if(difference > 0){
+                this.props.NewTimerSet(difference)
+                this.setTimer(difference)
+              }else{
+                this.setState({ondemand_running: false});
+
+              }
+
+
+        } catch (error) {
+        //console.log('Error reading value from AsyncStorage', error);
+      }
+    }
+    this.setState({ appState: nextAppState });
+  };
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   componentDidMount() {
+    this.subscription = AppState.addEventListener('change', this.handleAppStateChange);
+
     setConfiguration('navigation', this.props.navigation);
     setConfiguration('heaterListUpdated', 'false');
 
@@ -2850,8 +2946,19 @@ class HomeScreen extends Component {
       let resCode = response.responseCode;
       resCode = await decryptValue(resCode);
       if (resCode == 200) {
+        const now = new Date();
+        // UTC Date String
+        now.toUTCString(); // "Sun, 30 May 2021 14:59:15 GMT"
+
+        this.props.NewTimerSet(minutes*60)
+
+        await AsyncStorage.setItem('On_Demand_Minutes',(minutes*60).toString())
+        await AsyncStorage.setItem('On_Demand_Timer_Starts',now.toString())
+
         let resMessage = response.responseMessage;
         resMessage = await decryptValue(resMessage);
+
+
 
         this.setState({ondemand_running: true});
 
@@ -2861,9 +2968,10 @@ class HomeScreen extends Component {
             ondemandDifference: minutes * 60,
           },
           () => {
-            this.ondemandInterval = setInterval(() => {
-              this.onDemandCounter(minutes * 60);
-            }, 1000);
+            // this.ondemandInterval = setInterval(() => {
+            //   this.onDemandCounter(minutes * 60);
+            // }, 1000);
+            this.setTimer(minutes)
           },
         );
 
@@ -2887,6 +2995,37 @@ class HomeScreen extends Component {
         // );
       });
   }
+
+  setTimer(minutes){
+
+
+
+
+    if(this.ondemandInterval != null){
+      clearInterval(this.ondemandInterval)
+     }
+  
+
+     this.ondemandInterval = setInterval(() => {
+      console.log('Redux timer-----',this.props.timerRemaining)
+
+      this.setState({ondemandDifference: this.props.timerRemaining },() => {
+
+        this.onDemandCounter(this.state.ondemandDifference );
+  
+  
+  
+      });
+        
+     }, 1000);
+
+    
+ 
+  //   //this.ondemandInterval = setInterval(() => {
+  //      this.onDemandCounter(minutes * 60);
+  //  //  }, 1000);
+ 
+   }
 
   async afterCallGetRecircDataAPI() {
     const {response} = this.props.responseGetRecirculationData;
@@ -2913,6 +3052,11 @@ class HomeScreen extends Component {
           const ondemand_start_time = await decryptValue(
             data.ondemand_start_time,
           );
+
+          await AsyncStorage.setItem('On_Demand_Minutes',(ondemand_duration*60).toString())
+          await AsyncStorage.setItem('On_Demand_Timer_Starts',ondemand_start_time.toString())
+
+
           const recirc_toggle_value = await decryptValue(
             data.recirc_toggle_value,
           );
@@ -3009,7 +3153,9 @@ class HomeScreen extends Component {
         });
       }
 
-      if (this.state.ondemandCounterStart == false) {
+      //if (this.state.ondemandCounterStart == false) {
+      if (true) {
+
         var d2 = this.state.ondemand_start_time;
         let arr = d2.split(' ');
         let newDate = new Date(arr[0] + 'T' + arr[1] + 'Z');
@@ -3025,9 +3171,15 @@ class HomeScreen extends Component {
         let difference = (newDate - now) / 1000;
         difference = parseInt(difference);
 
-        this.ondemandInterval = setInterval(() => {
-          this.onDemandCounter(difference);
-        }, 1000);
+        // this.ondemandInterval = setInterval(() => {
+        //   this.onDemandCounter(difference);
+        // }, 1000);
+        if(difference > 0){
+          this.props.NewTimerSet(difference)
+
+          this.setTimer(difference)
+
+        }
 
         this.setState({
           ondemandCounterStart: true,
@@ -3038,8 +3190,106 @@ class HomeScreen extends Component {
     }
   }
 
+  // onDemandCounter(seconds) {
+  //   let reaminTime = this.state.ondemandDifference - 1;
+
+  //   let hours = parseInt(reaminTime / 3600);
+
+  //   if (hours < 10) {
+  //     hours = '0' + hours;
+  //   }
+
+  //   let minutes = parseInt(reaminTime / 60) % 60;
+
+  //   if (minutes < 10) {
+  //     minutes = '0' + minutes;
+  //   }
+
+  //   let sec = reaminTime % 60;
+  //   if (sec < 10) {
+  //     sec = '0' + sec;
+  //   }
+
+  //   this.setState({
+  //     ondemandDifference: reaminTime,
+  //     ondemandHours: hours,
+  //     ondemandMinutes: minutes,
+  //     ondemandSeconds: sec,
+  //   });
+
+  //   if (reaminTime < 0) {
+  //     clearInterval(this.ondemandInterval);
+  //     this.setState({ondemand_running: false});
+  //   }
+  // }
+
+
+
+
+  // onDemandCounter(seconds) {
+  //   let elapsed = 0; // Counter to keep track of elapsed time
+  
+  //   const x = BackgroundTimer.runBackgroundTimer(() => {
+  //     console.log('BackgroundTimer Running');
+  
+  //     this.setState(prevState => {
+  //       let remainingTime = prevState.ondemandDifference - 1000;
+  //       elapsed += 1; // Increment the elapsed counter by 1 second
+  
+  //       // Check if 15 seconds have elapsed
+  //       if (elapsed % 15 === 0) {
+  //         remainingTime -= 2000; // Subtract an additional 2 seconds
+  //         console.log('Subtracting additional 2 seconds');
+  //       }
+  
+  //       console.log('+++++++++++++++remainingTime', remainingTime);
+  //       if (remainingTime <= 0) {
+  //         setTimeout(() => BackgroundTimer.stopBackgroundTimer(), 0);
+  //         console.log('@@@@@@@@@@@@@@@@@@@@timer stopped');
+  //         return {
+  //           ondemandDifference: 0,
+  //           ondemandHours: '00',
+  //           ondemandMinutes: '00',
+  //           ondemandSeconds: '00',
+  //           ondemand_running: false
+
+  //         };
+  //       }
+  
+  //       let hours = parseInt(remainingTime / 3600000);
+  //       if (hours < 10) {
+  //         hours = '0' + hours;
+  //       }
+  
+  //       let minutes = parseInt((remainingTime % 3600000) / 60000);
+  //       if (minutes < 10) {
+  //         minutes = '0' + minutes;
+  //       }
+  
+  //       let seconds = parseInt((remainingTime % 60000) / 1000);
+  //       if (seconds < 10) {
+  //         seconds = '0' + seconds;
+  //       }
+  
+  //       return {
+  //         ondemandDifference: remainingTime,
+  //         ondemandHours: hours,
+  //         ondemandMinutes: minutes,
+  //         ondemandSeconds: seconds
+  //       };
+  //     });
+  //   }, 1000);
+  // }
+
+
+
+
+
+
+
   onDemandCounter(seconds) {
     let reaminTime = this.state.ondemandDifference - 1;
+    this.props.TimerSetting(reaminTime)
 
     let hours = parseInt(reaminTime / 3600);
 
@@ -3070,6 +3320,19 @@ class HomeScreen extends Component {
       this.setState({ondemand_running: false});
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   convertUTCToLocalTime = (dateString) => {
     let date = new Date(dateString);
@@ -4185,6 +4448,10 @@ class HomeScreen extends Component {
         setConfiguration('installationType', installationType);
 
         const ModelDetailArr = miscData.ModelDetail;
+
+
+        console.log('ModelDetailArrModelDetailArrModelDetailArr----111111',ModelDetailArr)
+
         const modalDetail = [];
         for (let i = 0; i < ModelDetailArr.length; i += 1) {
           const dict = ModelDetailArr[i];
@@ -4196,6 +4463,8 @@ class HomeScreen extends Component {
             MIN: await decryptValue(dict.Temperature.MIN),
             label: await decryptValue(dict.ModelName),
             value: await decryptValue(dict.ModelId),
+            serialNumberFormat: await decryptValue(dict.serialNumberFormat)
+
           };
           modalDetail.push(objModelDetail);
         }

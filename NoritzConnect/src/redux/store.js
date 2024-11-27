@@ -34,6 +34,9 @@ import appVersionDataReducer from '../modules/GetAppVersionData';
 
 import middleware from './middleware';
 
+import  TimerSettingReducer  from '../modules/OnDemandTimer';
+
+
 const rootReducer = combineReducers({
   loginReducer,
   registerReducer,
@@ -65,7 +68,8 @@ const rootReducer = combineReducers({
   GetRecirculationDataReducer,
   MaintainenceReducer,
   deleteReducer,
-  appVersionDataReducer
+  appVersionDataReducer,
+  TimerSettingReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(...middleware));

@@ -19,6 +19,7 @@
     "@react-native-community/netinfo": "^11.2.1",
     "@react-native-firebase/app": "^18.7.3",
     "@react-native-firebase/messaging": "^18.7.3",
+    "@react-native-ml-kit/text-recognition": "^1.5.1",
     "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
@@ -32,6 +33,7 @@
     "react-native-android-location-enabler": "^2.0.1",
     "react-native-android-open-settings": "^1.3.0",
     "react-native-animatable": "^1.4.0",
+    "react-native-background-timer": "^2.4.1",
     "react-native-calendars": "^1.1303.0",
     "react-native-camera": "^4.2.1",
     "react-native-dark-mode": "^0.2.2",
@@ -45,7 +47,7 @@
     "react-native-keyboard-aware-scrollview": "^2.1.0",
     "react-native-material-menu": "^2.0.0",
     "react-native-modal-datetime-picker": "^17.1.0",
-    "react-native-permissions": "^4.0.4",
+    "react-native-permissions": "^4.1.5",
     "react-native-phone-call": "^1.2.0",
     "react-native-popup-dialog": "^0.18.3",
     "react-native-qrcode-scanner": "^1.5.5",
@@ -66,6 +68,7 @@
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^3.1.0",
+    "rn-qr-generator": "^1.4.0",
     "standard-http-error": "^2.0.1"
   },
   "devDependencies": {

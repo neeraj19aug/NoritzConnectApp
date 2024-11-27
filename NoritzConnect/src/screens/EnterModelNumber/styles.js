@@ -3,8 +3,217 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Fonts from '../../services/Fonts';
+import { height, width } from '@fortawesome/free-solid-svg-icons/fa0';
 
 const styles = {
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+},
+main: {
+    flexDirection: 'row',
+   // alignItems: 'center',
+   // justifyContent: 'center',
+  // marginBottom: 20,
+ marginTop: wp('2%'),
+  marginLeft: wp('5%'),
+        alignItems: 'center',
+       // zIndex: 2,
+    
+    
+  },
+  placeholderContainer: {
+    position: 'absolute',
+   // backgroundColor:'red',
+   // zIndex: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+},
+box1: {
+    width: wp('20%'),
+    height: wp('12%'),
+   // justifyContent: 'center',
+   // alignItems: 'center',
+  //  borderRadius: 10,
+  borderBottomWidth: 0.81,
+    borderColor:'grey'
+},
+box2: {
+  width: wp('10%'),
+  height: wp('12%'),
+  //  justifyContent: 'center',
+  //  alignItems: 'center',
+  //  borderRadius: 10,
+  borderBottomWidth: 0.81,
+  borderColor: 'grey',
+},
+box3: {
+  width: wp('25%'),
+    height: wp('12%'),
+  //  justifyContent: 'center',
+  //  alignItems: 'center',
+   // borderRadius: 10,
+   borderBottomWidth: 0.81,
+    borderColor:'grey'
+},
+boxLarge: {
+   // width: wp('50%'),
+  height: 50,
+  paddingRight:wp('4.7%'),
+   // justifyContent: 'center',
+   // alignItems: 'center',
+  //borderBottomWidth: 0.81,
+ // borderColor: 'grey',
+  marginTop: wp('2%'),
+  marginLeft: wp('5%'),
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+ // backgroundColor:'red'
+
+    
+  },
+  innerLargeBox: {
+    width:wp('60%'),
+    borderBottomWidth: 0.81,
+    borderColor: 'grey'
+},
+input: {
+    width: '100%',
+    height: '100%',
+  color:'black',
+  fontSize: wp('4.4%'),
+
+
+  // fontSize: wp('4.2%'),
+  // paddingHorizontal: 10,
+  // maxWidth: wp('40%'),
+   fontFamily: Fonts.SpectralRegular,
+  
+   
+   
+  },
+
+  separatorDot: {
+    fontSize: wp('6.2%'),
+    fontWeight: 'bold',
+  marginHorizontal: 5,
+//marginBottom:wp('0%')
+marginTop:wp('8.5%')
+  //alignSelf: 'bottom',
+  // justifyContent:'center'
+ // alignItems:'center'
+},
+separator: {
+  fontSize: wp('6.2%'),
+    fontWeight: 'bold',
+  marginHorizontal: 5,
+  marginTop:wp('10.5%')
+
+  //alignSelf: 'bottom',
+  // justifyContent:'center'
+ // alignItems:'center'
+},
+preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+},
+XImg:{
+  width:hp('4%'),
+   height:hp('4%'),
+    marginRight:hp('5%'),
+  //  backgroundColor:'blue'
+
+},
+flashImg:{
+  width:hp('3%'),
+   height:hp('4%'),
+   marginLeft:hp('5%'),
+  // backgroundColor:'blue'
+
+  },
+captureContainer: {
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    width:'100%',
+    margin:20,
+    alignItems:'center',
+   // marginVertical:hp('5%'),
+  //  backgroundColor:'yellow',
+   // marginLeft:hp('5%'),
+    //marginRight:hp('5%')
+    
+    marginBottom:hp('5%')
+},
+capture: {
+   // flex: 1,
+    backgroundColor: 'red',
+   // borderRadius: 5,
+    padding: 10,
+    paddingHorizontal: 20,
+   
+   // marginHorizontal: 120,
+    
+},
+captureText: {
+  fontFamily: Fonts.oxygenRegular,
+  fontSize: wp('5%'),
+  color: 'white',
+    textAlign: 'center',
+},
+CameraSection: {
+  backgroundColor:'transparent',
+  flexDirection:'row',
+  marginTop:hp('2%'),
+  justifyContent:'space-between',
+  height:hp('7%'),
+  alignItems:'center'
+},
+
+buttonContainer: {
+    margin: 30,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+},
+loadingIndicator: {
+  width: wp('12%'),
+  height: wp('12%'),
+ // backgroundColor: 'blue',
+  justifyContent: 'center',
+  alignItems: 'center',
+//  borderRadius: 10,
+  marginLeft: wp('2.5%'),
+//  borderWidth: 1,
+  marginTop:wp('4%')
+ 
+    // position: 'absolute',
+    // alignSelf: 'center',
+    // bottom: 20,
+},
+
+loadingIndicator1:{
+
+  width: wp('12%'),
+  height: wp('12%'),
+ // backgroundColor: 'blue',
+  justifyContent: 'center',
+  alignItems: 'center',
+ // borderRadius: 10,
+  marginLeft: wp('2.5%'),
+ // borderWidth: 1,
+  marginTop:wp('1.5%')
+ 
+
+
+
+},
   pageContainer: {
     flex: 1,
 
@@ -177,7 +386,65 @@ const styles = {
     marginHorizontal: 5,
     fontFamily: Fonts.oxygenRegular
 
-  }
+  },
+  ScanImg1: {
+    width: wp('12%'),
+    height: wp('12%'),
+   // backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+   // borderRadius: 10,
+    marginLeft: wp('2.5%'),
+   // borderWidth: 1,
+    marginTop:wp('1%')
+   
+    
+  },
+  ScanImg: {
+    width: wp('12%'),
+    height: wp('12%'),
+   // backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+  //  borderRadius: 10,
+    marginLeft: wp('2.5%'),
+  //  borderWidth: 1,
+    marginTop:wp('3%')
+   
+    
+  },
+  outerMain:{flexDirection:'row', justifyContent:'space-between', paddingRight:18},
+  main: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  // backgroundColor:'red',
+ // marginTop: wp('2%'),
+   marginLeft: wp('5%'),
+       
+       
+     
+},
+inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+   // zIndex: 2,
+},
+placeholderContainer: {
+    position: 'absolute',
+   // zIndex: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+   // alignItems: 'center',
+},
+placeholderText: {
+    color: '#9B9B9B',
+    fontSize: wp('4.4%'),
+},
+  
 
 };
 

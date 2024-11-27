@@ -135,6 +135,7 @@ class AddHeaterLoginScreen extends Component {
         setConfiguration('installationType', installationType);
 
         const ModelDetailArr = miscData.ModelDetail;
+        console.log('ModelDetailArrModelDetailArrModelDetailArr----',ModelDetailArr)
         const modalDetail = [];
         for (let i = 0; i < ModelDetailArr.length; i += 1) {
           const dict = ModelDetailArr[i];
@@ -146,6 +147,7 @@ class AddHeaterLoginScreen extends Component {
             MIN: await decryptValue(dict.Temperature.MIN),
             label: await decryptValue(dict.ModelName),
             value: await decryptValue(dict.ModelId),
+            serialNumberFormat: await decryptValue(dict.serialNumberFormat)
           };
           modalDetail.push(objModelDetail);
         }

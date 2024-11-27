@@ -98,7 +98,8 @@ class WarrantyRegistrationScreen extends Component {
       selectedModelMissing: false,
       gasTypeMissing: false,
       dateOfInstallMissing: false,
-      showDatePicker: false
+      showDatePicker: false,
+      serialNumberFormat :''
     };
   }
   componentDidMount() {
@@ -130,7 +131,9 @@ class WarrantyRegistrationScreen extends Component {
       modalDetail,
       selectedModel: cheeoseHeaterObj.model_name,
       gasType: cheeoseHeaterObj.gas,
+
       serialNumber: cheeoseHeaterObj.serialNumber,
+      serialNumberFormat: cheeoseHeaterObj.serialNumberFormat,
       serialNumberYear: serial.substring(0, 4),
       serialNumberMonth: serial.substring(5, 7),
       serialNumberValue: serial.substring(8, serial.length),
@@ -352,12 +355,21 @@ class WarrantyRegistrationScreen extends Component {
 
   callWebservicWarrantyRegistration() {
     const DataArrayJson = [];
-    let serial =
+    let serial;
+    {
+      this.state.serialNumberFormat == '1' ?  
+      
+     serial =
       this.state.serialNumberYear +
       '.' +
       this.state.serialNumberMonth +
       '-' +
-      this.state.serialNumberValue;
+      this.state.serialNumberValue  :   serial = this.state.serialNumber
+
+    }
+    
+
+   // console.log('$$$$$$$$$$$$$$$$$$$$$--',serial)
 
     const TempDic = {
       model: this.state.selectedModel,
@@ -399,6 +411,8 @@ class WarrantyRegistrationScreen extends Component {
 
   async afterWarrantyRegisterAPI() {
     const response = this.props.responseWarrantyRegister.response['123'];
+
+ //   console.log('API CALLED------============================',response)
 
     if (response != null) {
       let resCode = response.responseCode;
@@ -1209,7 +1223,11 @@ class WarrantyRegistrationScreen extends Component {
                 onPress={() => this.serialNumberField.focus()}
                 onChangeText={serialNumber => this.setState({serialNumber})}
               /> */}
-              <View
+
+              {
+                this.state.serialNumberFormat == '1' ? 
+
+                <View
                 style={styles.txtModelNumberContainer}>
                 <View style={styles.setModelMonthWidth}>
                   <FormField
@@ -1290,7 +1308,30 @@ class WarrantyRegistrationScreen extends Component {
                     }}
                   />
                 </View>
-              </View>
+              </View> : 
+
+
+                  <FormField
+                  // refer={instance => {
+                  //   this.serialNumberField = instance;
+                  // }}
+                // style={styles.fullNameStyle}
+                  title="Serial Number#"
+                  keyboardType="number-pad"
+                  hideTitle
+                  value={this.state.serialNumber}
+                ></FormField>
+
+
+
+
+
+
+
+
+                
+              }
+              
 
               <TouchableOpacity
                 style={[

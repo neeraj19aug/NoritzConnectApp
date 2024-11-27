@@ -16,10 +16,17 @@ import {setInstantReserve} from '../../modules/RequestInstantReserve';
 import {getRecircData} from '../../modules/GetRecirculationData';
 import {getMaintainenceData} from '../../modules/CallMaintainence';
 
+import { NewTimerSet, ResetTimer, TimerSetting } from '../../modules/OnDemandTimer';
+
+
 // import { NavigationActions } from 'react-navigation';
 //GetRecirculationDataReducer
 
 const mapStateToProps = (state) => ({
+
+  timerRemaining : state.TimerSettingReducer.Counter,
+
+
   isBusyMetadata: state.metadataReducer.isBusy,
   responseMetadata: state.metadataReducer,
 
@@ -78,4 +85,10 @@ export default connect(mapStateToProps, (dispatch) => ({
   getRecircData: bindActionCreators(getRecircData, dispatch),
   getMaintainenceData: bindActionCreators(getMaintainenceData, dispatch),
   ChangeTemperature: bindActionCreators(ChangeTemperature, dispatch),
+
+  TimerSetting :  bindActionCreators( TimerSetting, dispatch),
+  NewTimerSet : bindActionCreators( NewTimerSet, dispatch),
+  ResetTimer :  bindActionCreators( ResetTimer, dispatch),
+
+  
 }))(HomeScreen);

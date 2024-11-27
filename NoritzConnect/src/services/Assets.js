@@ -108,4 +108,5 @@ export default {
   backArrow: require('../assets/image/backArrow.png'),
   radioButtonChecked: require('../assets/image/radio-buttons.png'),
   radioButtonUnchecked: require('../assets/image/radio-button.png'),
+  ScanImg: require('../assets/image/ScanImg.png')
 };
